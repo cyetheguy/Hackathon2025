@@ -361,23 +361,23 @@ def create_relaxing_frame(root):
     )
     instruction_label.pack(pady=10)
     
-    # Exit button at the bottom
-
-    # Add a button in the top-left corner
-    top_left_button = tk.Button(frame, text="< Exit Relaxation", 
+    # Exit button in top left
+    exit_button = tk.Button(
+        frame, 
+        text="← Exit", 
         command=lambda: globe.app.show_frame("Main"),
-        bg=bg_color,
-        fg=fg_color,
-        activebackground=fg_color,
-        activeforeground=bg_color,
-        relief=tk.RAISED,
-        bd=2,
-        font=("Helvetica", 12))
-    top_left_button.grid(row=0, column=0, sticky="nw", padx=10, pady=10)
-
-    button = tk.Button(
-        
+        bg="#B2DFDB",
+        fg="#004D40",
+        activebackground="#004D40",
+        activeforeground="#B2DFDB",
+        bd=2, 
+        font=("Helvetica", 10),
+        padx=10,  # Add some horizontal padding
+        pady=5  # Add some vertical padding
     )
+    exit_button.place(x=10, y=10)  # Position in top left with 10px padding
+
+    button = tk.Button()
     # button.pack(pady=20, side=tk.BOTTOM)
 
     def update_theme(is_light):
