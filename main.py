@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import Menu
+from tkinter.simpledialog import askstring
+from tkinter import Menu, messagebox
 import pygame
 
 import globe
@@ -77,6 +78,10 @@ class App:
 
     def show_frame(self, name):
         self.frames[name].tkraise()
+        if not self.username.get() and name == "Refute":
+            self.username.set(askstring("Enter Username", "Who are you?\nYou will be connect shortly."))
+            globe.client.set_name(self.username.get())
+
 
     def toggle_theme(self, override:bool = None):
         if (override != None):

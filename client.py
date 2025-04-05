@@ -6,7 +6,7 @@ class Client:
     def __init__(self, HOST, PORT):
         self.socket = socket.socket()
         self.socket.connect((HOST, PORT))
-        self.name = input("Enter your name: ")  # Fixed typo "imput" to "input"
+        ##self.name = input("Enter your name: ")  # Fixed typo "imput" to "input"
         ##self.talk_to_server()
 
     def talk_to_server(self):
@@ -23,6 +23,10 @@ class Client:
     def send_m(self, m:str) -> None:
         client_message = self.name + ": " + m  # Added space after ":"
         self.socket.send(client_message.encode())
+    
+    def set_name(self, name):
+        self.name = name
+        self.socket.send(self.name.encode())
 
     def receive_message(self):
         while True:
@@ -33,4 +37,5 @@ class Client:
 
 if __name__ == "__main__":
     client = Client('127.0.0.1', 7633)
+    client.name = input("Enter your name: ")  # Fixed typo "imput" to "input"
     client.talk_to_server()
