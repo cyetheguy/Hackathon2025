@@ -301,16 +301,16 @@ def create_relaxing_frame(root):
     frame.grid(row=0, column=0, sticky="nsew")
     
     # Initialize with light theme colors
-    bg_color = "#B2DFDB"
+    bgColor = "#B2DFDB"
     fg_color = "#004D40"
-    frame.config(bg=bg_color)
+    frame.config(bg=bgColor)
     
     # Create a main container frame
-    main_container = tk.Frame(frame, bg=bg_color)
+    main_container = tk.Frame(frame, bg=bgColor)
     main_container.pack(expand=True, fill=tk.BOTH, padx=20, pady=20)
     
     # Quote section at the top
-    quote_frame = tk.Frame(main_container, bg=bg_color)
+    quote_frame = tk.Frame(main_container, bg=bgColor)
     quote_frame.pack(fill=tk.X, pady=10)
     
     # Title label
@@ -318,7 +318,7 @@ def create_relaxing_frame(root):
         quote_frame, 
         text="Mindful Moment", 
         font=("Helvetica", 18, "italic"), 
-        bg=bg_color, 
+        bg=bgColor, 
         fg=fg_color
     )
     title_label.pack(pady=(10, 5))
@@ -328,7 +328,7 @@ def create_relaxing_frame(root):
         quote_frame,
         text="Breathe deeply...",
         font=("Helvetica", 14),
-        bg=bg_color,
+        bg=bgColor,
         fg="#00695C"
     )
     subtitle_label.pack(pady=(0, 20))
@@ -409,30 +409,30 @@ def create_relaxing_frame(root):
         }
 
     # Container for tip content
-    tip_container = tk.Frame(quote_frame, bg=bg_color)
+    tip_container = tk.Frame(quote_frame, bg=bgColor)
     tip_container.pack(fill=tk.X, pady=10)
 
     # Track last shown local quotes to avoid repeats
     last_local_quotes = []
     
     # Mode toggle button
-    mode_var = tk.BooleanVar(value=True)  # True for local, False for AI
+    mode_var = tk.BooleanVar(value=False)  # True for local, False for AI
     mode_button = tk.Checkbutton(
         quote_frame,
         text="Switch to AI Tips",
         variable=mode_var,
         command=lambda: refresh_content(),
-        bg=bg_color,
+        bg=bgColor,
         fg=fg_color,
-        selectcolor=bg_color,
-        activebackground=bg_color,
+        selectcolor=bgColor,
+        activebackground=bgColor,
         activeforeground=fg_color,
         font=("Helvetica", 10)
     )
     mode_button.pack(pady=10)
 
     # Canvas for the interactive orb
-    canvas = tk.Canvas(main_container, width=300, height=300, bg=bg_color, 
+    canvas = tk.Canvas(main_container, width=300, height=300, bg=bgColor, 
                       bd=0, highlightthickness=0)
     canvas.pack(pady=30)
 
@@ -444,7 +444,7 @@ def create_relaxing_frame(root):
         main_container,
         text="Gently interact with the orb",
         font=("Helvetica", 10, "italic"),
-        bg=bg_color,
+        bg=bgColor,
         fg="#00796B"
     )
     instruction_label.pack(pady=10)
@@ -454,7 +454,7 @@ def create_relaxing_frame(root):
         frame, 
         text="← Exit", 
         command=lambda: [globe.app.show_frame("Main"), refresh_content()],
-        bg=bg_color,
+        bg=bgColor,
         fg=fg_color,
         activebackground="#004D40",
         activeforeground="#B2DFDB",
@@ -492,7 +492,7 @@ def create_relaxing_frame(root):
             return tip, "AI Suggestion"
         except Exception as e:
             print("OpenAI API error:", e)
-            return f"AI service unavailable. Error: {str(e)[:50]}...", "System Message"
+            return f"AI service unavailable. Error: {str(e)[:150]}...", "System Message"
 
     def get_local_tip():
         """Get a local tip that hasn't been shown recently"""
@@ -533,7 +533,7 @@ def create_relaxing_frame(root):
             tip_container,
             text=f'"{tip}"',
             font=("Helvetica", 12),
-            bg=bg_color,
+            bg=bgColor,
             fg=fg_color,
             wraplength=500,
             justify="center"
@@ -543,7 +543,7 @@ def create_relaxing_frame(root):
             tip_container,
             text=f"~ {source}",
             font=("Helvetica", 10, "italic"),
-            bg=bg_color,
+            bg=bgColor,
             fg="#00796B"
         ).pack(pady=(5, 0))
 
@@ -562,7 +562,7 @@ def create_relaxing_frame(root):
                 tip_container,
                 text="Fetching AI tip...",
                 font=("Helvetica", 12),
-                bg=bg_color,
+                bg=bgColor,
                 fg=fg_color
             )
             loading_label.pack()
@@ -576,30 +576,30 @@ def create_relaxing_frame(root):
             threading.Thread(target=fetch_and_display, daemon=True).start()
 
     def update_theme(is_light):
-        nonlocal bg_color, fg_color
+        nonlocal bgColor, fg_color
         if is_light:
-            bg_color = "#B2DFDB"
+            bgColor = "#B2DFDB"
             fg_color = "#004D40"
             orb.change_type("water")
         else:
-            bg_color = "#263238"
+            bgColor = "#263238"
             fg_color = "#FF5722"
             orb.change_type("lava")
 
-        frame.config(bg=bg_color)
-        main_container.config(bg=bg_color)
-        quote_frame.config(bg=bg_color)
-        tip_container.config(bg=bg_color)
-        title_label.config(bg=bg_color, fg=fg_color)
-        subtitle_label.config(bg=bg_color, fg="#00695C")
-        instruction_label.config(bg=bg_color)
-        exit_button.config(bg=bg_color, fg=fg_color, activebackground=fg_color)
-        mode_button.config(bg=bg_color, fg=fg_color, activebackground=bg_color)
+        frame.config(bg=bgColor)
+        main_container.config(bg=bgColor)
+        quote_frame.config(bg=bgColor)
+        tip_container.config(bg=bgColor)
+        title_label.config(bg=bgColor, fg=fg_color)
+        subtitle_label.config(bg=bgColor, fg="#00695C")
+        instruction_label.config(bg=bgColor)
+        exit_button.config(bg=bgColor, fg=fg_color, activebackground=fg_color)
+        mode_button.config(bg=bgColor, fg=fg_color, activebackground=bgColor)
 
         # Update all existing tip labels if any
         for widget in tip_container.winfo_children():
             if isinstance(widget, tk.Label):
-                widget.config(bg=bg_color)
+                widget.config(bg=bgColor)
                 if "italic" in widget.cget("font"):
                     widget.config(fg="#00796B")  # Source color
                 else:
