@@ -1,5 +1,7 @@
 import pygame
 
+from globe import omni_dir
+
 # Initialize the mixer globally
 
 class AudioManager:

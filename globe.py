@@ -1,3 +1,4 @@
+from sys import platform
 ## main app
 app = None
 client = None
