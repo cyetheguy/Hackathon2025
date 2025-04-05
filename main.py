@@ -86,7 +86,7 @@ class App:
     def show_frame(self, name):
         self.frames[name].tkraise()
         if not self.username.get() and name == "Refute":
-            self.username.set(askstring("Enter Username", "Who are you?\nYou will be connect shortly."))
+            self.username.set(askstring("Enter Username", "Please enter a name?\nYou will be connected shortly."))
             globe.client.set_name(self.username.get())
 
     def update_theme(self, bgColor=None, fgColor=None, hgltColor=None) -> None:
