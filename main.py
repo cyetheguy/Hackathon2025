@@ -21,7 +21,8 @@ class App:
         self.root.rowconfigure(0, weight=1)
         self.root.columnconfigure(0, weight=1)
         self.isLight:bool = True  # Default isLight is light
-        self.client = client.Client('127.0.0.1', 7633)
+        ##self.client = client.Client('127.0.0.1', 7633)
+        self.username = tk.StringVar(self.root)
         
         # Colors
         self.bg_color = globe.black
@@ -116,4 +117,5 @@ class App:
 if __name__ == "__main__":
     root = tk.Tk()
     globe.app = App(root)
+    globe.client = client.Client('127.0.0.1', 7633)
     root.mainloop()

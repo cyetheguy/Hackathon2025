@@ -2,10 +2,15 @@ import tkinter as tk
 from tkinter import ttk
 
 import globe
+import client
+
+message = None
 
 def create_frame(root):
+    global message
     frame = tk.Frame(root)
     frame.grid(row=0, column=0, sticky="nsew")
+    message = tk.StringVar(root)
     
     # Configure rows and columns of the frame
     frame.grid_rowconfigure(0, weight=1)
@@ -30,11 +35,11 @@ def create_frame(root):
     title_label.grid(row=0, column=1, sticky="n", padx=10, pady=10)
     
     # Add an entry box in the bottom-left corner
-    bottom_left_entry = tk.Entry(frame, font=("Arial", 12))
+    bottom_left_entry = tk.Entry(frame, font=("Arial", 12), textvariable=message)
     bottom_left_entry.grid(row=2, column=0, columnspan=2, sticky="sw", padx=10, pady=10)
     
     # Add a button in the bottom-right corner
-    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12))
+    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12), command=lambda: globe.client.send_m(message.get()))
     bottom_right_button.grid(row=2, column=2, sticky="se", padx=10, pady=10)
     
     return frame

@@ -1,5 +1,6 @@
 ## main app
 app = None
+client = None
 
 ## colors
 white = (255, 255, 255)
