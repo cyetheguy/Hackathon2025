@@ -20,4 +20,6 @@ Light Mode's "Gentle Ocean Waves Mix (2018)" Sound Effect by freesound_community
 
 Their use is completely in line with Pixabay's content liscence
 
-Other songs borrowed of YouTube.
+Other songs borrowed off YouTube.
+
+# Note: The list of bad words was copied from repository of English profanity/ banned words and phrases, we DO NOT CONDONE THE USE OF THEM
