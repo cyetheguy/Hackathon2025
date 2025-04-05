@@ -145,3 +145,4 @@ def check_message() -> bool:
         globe.app.enter_chill_mode()
     
     globe.conversation.send_message(msg)
+    message.set("")

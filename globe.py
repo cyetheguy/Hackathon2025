@@ -4,7 +4,7 @@ app = None
 client = None
 conversation = None
 
-ip_addr = '127.0.0.1'
+ip_addr = '172.20.10.6'
 ip_port = 7633
 
 ## colors
@@ -14,7 +14,7 @@ teal = (178, 223, 219)
 dark_turquoise = (0, 77, 64)
 purple = (165, 120, 205)
 stormy_gray = (25, 25, 25)
-gray = (105, 105, 105)
+gray = (220, 220, 220)
 razorback = (157, 34, 53)
 ice = (109, 183, 252)
 dark_ice = (60, 97, 133)
