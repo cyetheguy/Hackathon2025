@@ -4,6 +4,9 @@ app = None
 client = None
 conversation = None
 
+ip_addr = '127.0.0.1'
+ip_port = 7633
+
 ## colors
 white = (255, 255, 255)
 black = (0,0,0)
@@ -13,7 +16,6 @@ purple = (165, 120, 205)
 stormy_gray = (25, 25, 25)
 gray = (105, 105, 105)
 razorback = (157, 34, 53)
-
 ice = (109, 183, 252)
 dark_ice = (60, 97, 133)
 blue = (0, 0, 255)

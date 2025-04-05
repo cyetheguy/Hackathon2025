@@ -76,17 +76,26 @@ class App:
         frame_menu.add_command(label="Light Theme", command=lambda: self.toggle_theme(True))
         frame_menu.add_command(label="Dark Theme", command=lambda: self.toggle_theme(False))
 
-        audio_menu = Menu(menu_bar, tearoff=0)
-        menu_bar.add_cascade(label="Audio Volume", menu=audio_menu)
-        audio_menu.add_command(label="100%", command=lambda: pygame.mixer.music.set_volume(1))
-        audio_menu.add_command(label=" 50%", command=lambda: pygame.mixer.music.set_volume(0.5))
-        audio_menu.add_command(label=" 25%", command=lambda: pygame.mixer.music.set_volume(0.25))
-        audio_menu.add_command(label="Mute", command=lambda: pygame.mixer.music.set_volume(0))
+        soundtrack_menu = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Soundtrack Volume", menu=soundtrack_menu)
+        soundtrack_menu.add_command(label="100%", command=lambda: pygame.mixer.Channel(1).set_volume(1))
+        soundtrack_menu.add_command(label=" 50%", command=lambda: pygame.mixer.Channel(1).set_volume(0.5))
+        soundtrack_menu.add_command(label=" 25%", command=lambda: pygame.mixer.Channel(1).set_volume(0.25))
+        soundtrack_menu.add_command(label="Mute", command=lambda: pygame.mixer.Channel(1).set_volume(0))
+
+        ambience_menu = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Ambience Volume", menu=ambience_menu)
+        ambience_menu.add_command(label="100%", command=lambda: pygame.mixer.music.set_volume(1))
+        ambience_menu.add_command(label=" 50%", command=lambda: pygame.mixer.music.set_volume(0.5))
+        ambience_menu.add_command(label=" 25%", command=lambda: pygame.mixer.music.set_volume(0.25))
+        ambience_menu.add_command(label="Mute", command=lambda: pygame.mixer.music.set_volume(0))
+
+        
 
     def show_frame(self, name):
         self.frames[name].tkraise()
         if not self.username.get() and name == "Refute":
-            self.username.set(askstring("Enter Username", "Who are you?\nYou will be connect shortly."))
+            self.username.set(askstring("Enter Username", "What would you prefer to be called?\t\t"))
             globe.client.set_name(self.username.get())
 
     def update_theme(self, bgColor=None, fgColor=None, hgltColor=None) -> None:
@@ -158,7 +167,7 @@ class App:
         self.fg_color = fg_target
         self.highlight = highlight_temp
     
-    def entre_chill_mode(self) -> None:
+    def enter_chill_mode(self) -> None:
         bg_target = globe.ice
         fg_target = globe.dark_ice
         hglt_target = globe.blue
@@ -181,13 +190,13 @@ class App:
                 refute.heated -=1
                 start_time = cur_time
 
-        self.toggle_theme(self.isLight)
+        self.toggle_theme(not self.isLight)
 
 # Run the application
 if __name__ == "__main__":
     root = tk.Tk()
     globe.app = App(root)
-    globe.client = client.Client('127.0.0.1', 7633)
+    globe.client = client.Client(globe.ip_addr, globe.ip_port)
     client_thread = threading.Thread(target=globe.client.receive_message)
     client_thread.start()
     root.mainloop()

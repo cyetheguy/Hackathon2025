@@ -24,7 +24,7 @@ class AudioManager:
             pygame.mixer.music.load(omni_dir(sound_path))
             ambience = pygame.mixer.Channel(1)
             ambient_song = pygame.mixer.Sound(omni_dir(f"song{random.randint(1,3)}.mp3"))
-            ambience.play(ambient_song)
+            ambience.play(ambient_song, loops=-1, fade_ms=2000)
              # Set theme-specific volume
               # Rain super loud so decrease volume
 
