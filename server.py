@@ -1,5 +1,7 @@
 import socket
 from threading import Thread
+import time
+import json
 
 class Server:
     rooms = {}  # Dictionary to store rooms and their clients
@@ -23,10 +25,11 @@ class Server:
             if room_id not in Server.rooms:
                 Server.rooms[room_id] = []
             Server.rooms[room_id].append(client)
+            
             # Broadcast to others in the same room that a new client has joined
             self.broadcast_message(client_name, client_name + " has joined the room", room_id)
 
-
+            # Start a new thread to handle this client
             Thread(target=self.handle_new_client, args=(client,)).start()
 
     def get_room_for_client(self):
@@ -34,7 +37,7 @@ class Server:
         for room_id, clients in Server.rooms.items():
             if len(clients) < 2:
                 return room_id
-        # If not create a new room
+        # If not, create a new room
         new_room_id = len(Server.rooms) + 1
         return str(new_room_id)
 
@@ -44,23 +47,44 @@ class Server:
         room_id = client['room_id']
 
         while True:
-            client_message = client_socket.recv(1024).decode()
+            try:
+                # Receive the message from the client
+                client_message = client_socket.recv(1024).decode()
 
-            # If the message is "bye", remove the client and close the socket
-            if client_message.strip() == client_name + ": bye" or not client_message.strip():
-                self.broadcast_message(client_name, client_name + " has left the room", room_id)
-                Server.rooms[room_id].remove(client)
-                client_socket.close()
+                # If the message is "bye" or empty, disconnect the client
+                if client_message.strip() == client_name + ": bye" or not client_message.strip():
+                    self.broadcast_message(client_name, client_name + " has left the room", room_id)
+                    Server.rooms[room_id].remove(client)
+                    client_socket.close()
+                    break
+                else:
+                    # Broadcast the message to others in the same room
+                    self.broadcast_message(client_name, client_message, room_id)
+
+            except Exception as e:
+                print(f"Error handling client {client_name}: {e}")
                 break
-            else:
-                # Broadcast the message to others in the same room
-                self.broadcast_message(client_name, client_message, room_id)
 
     def broadcast_message(self, sender_name, message, room_id):
         for client in Server.rooms[room_id]:
             client_socket = client['client_socket']
             if client['client_name'] != sender_name:
-                client_socket.send(message.encode())
+                try:
+                    # Adding timestamp
+                    timestamp = time.strftime('%b %d, %Y %I:%M %p')
+                    message_dict = {
+                        "name_of_sender": sender_name,
+                        "time_sent": timestamp,
+                        "message": message
+                    }
+                    
+                    # Convert the message to JSON and send it
+                    json_message = json.dumps(message_dict)
+                    client_socket.send(json_message.encode())
+
+                except Exception as e:
+                    print(f"Error sending message to {client['client_name']}: {e}")
+                    continue
 
 if __name__ == '__main__':
     server = Server('127.0.0.1', 7633)
