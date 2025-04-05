@@ -421,7 +421,7 @@ def create_relaxing_frame(root):
         quote_frame,
         text="Switch to AI Tips",
         variable=mode_var,
-        command=lambda: refresh_content(),
+        command=lambda: [refresh_content(), globe.app.update_theme()],
         bg=bgColor,
         fg=fg_color,
         selectcolor=bgColor,
@@ -467,15 +467,16 @@ def create_relaxing_frame(root):
 
     # AI functionality setup
     client = None
-    try:
-        client = openai.OpenAI(api_key="your-api-key-here")
-    except Exception as e:
-        print("OpenAI initialization error:", e)
-        mode_var.set(True)  # Fallback to local mode if API fails to initialize
-        mode_button.config(text="AI Unavailable (Using Local Tips)")
+    
 
     def get_ai_tip():
         if not client:
+            try:
+                client = openai.OpenAI(api_key="your-api-key-here")
+            except Exception as e:
+                print("OpenAI initialization error:", e)
+                mode_var.set(True)  # Fallback to local mode if API fails to initialize
+                mode_button.config(text="AI Unavailable (Using Local Tips)")
             return "AI service unavailable. Using local tips.", ""
         
         try:
