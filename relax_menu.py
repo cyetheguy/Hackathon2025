@@ -7,6 +7,8 @@ import time
 import math
 from itertools import cycle
 import main
+import openai
+
 
 class InteractiveOrb:
     def __init__(self, canvas, orb_type="water"):
@@ -227,6 +229,73 @@ class InteractiveOrb:
         self.is_dragging = False
         self.add_ripple(amplitude=10, frequency=4, decay=0.1)
 
+    def create_relaxing_frame(root):
+        frame = tk.Frame(root, bg="#B2DFDB")
+        frame.grid(row=0, column=0, sticky="nsew")
+
+        label = tk.Label(
+            frame, 
+            text="Take a deep breath...\n", 
+            font=("Helvetica", 18, "italic"), 
+            bg="#B2DFDB", 
+            fg="#004D40"
+        )
+        label.pack(pady=50)
+
+        quote = tk.Label(
+            frame,
+            text="“Peace comes from within. Do not seek it without.” – Buddha",
+            font=("Helvetica", 12),
+            bg="#B2DFDB",
+            fg="#00695C",
+            wraplength=350,
+            justify="center"
+        )
+        quote.pack(pady=10)
+
+        tip_label = tk.Label(
+            frame,
+            text="Loading tip...",
+            font=("Helvetica", 12, "italic"),
+            bg="#B2DFDB",
+            fg="#00796B",
+            wraplength=350,
+            justify="center"
+        )
+        tip_label.pack(pady=20)
+
+        button = tk.Button(frame, text="Exit Relax", command=lambda: globe.app.show_frame("Main"))
+        button.pack(pady=10)
+
+        def update_tip():
+            tip_label.config(text="Fetching tip...")
+            def fetch_tip():
+                tip = get_relaxation_tip()
+                tip_label.after(0, lambda: tip_label.config(text=tip))
+            threading.Thread(target=fetch_tip).start()
+
+        frame.update_tip = update_tip
+        return frame
+
+    # AI functionality
+    client = openai.OpenAI(api_key="your-api-key-here")
+
+    def get_relaxation_tip():
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a calm and gentle assistant who shares simple relaxation tips."},
+                    {"role": "user", "content": "Give me one short and peaceful relaxation tip."}
+                ],
+                max_tokens=50,
+                temperature=0.7
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            print("OpenAI API error:", e)
+            return "Take a deep breath and let your worries fade away."
+
 def create_relaxing_frame(root):
     frame = tk.Frame(root)
     frame.grid(row=0, column=0, sticky="nsew")
@@ -264,7 +333,7 @@ def create_relaxing_frame(root):
     )
     subtitle_label.pack(pady=(0, 20))
 
-    # Relaxation tips database (expanded)
+    # Relaxation tips database (AI at home)
     relaxation_database = {
             "Mindfulness": [
                 ("The present moment is the only moment available to us.", "Thich Nhat Hanh"),
@@ -339,9 +408,28 @@ def create_relaxing_frame(root):
             ]
         }
 
-    # Container for tip frames
-    tips_container = tk.Frame(quote_frame, bg=bg_color)
-    tips_container.pack(fill=tk.X)
+    # Container for tip content
+    tip_container = tk.Frame(quote_frame, bg=bg_color)
+    tip_container.pack(fill=tk.X, pady=10)
+
+    # Track last shown local quotes to avoid repeats
+    last_local_quotes = []
+    
+    # Mode toggle button
+    mode_var = tk.BooleanVar(value=True)  # True for local, False for AI
+    mode_button = tk.Checkbutton(
+        quote_frame,
+        text="Switch to AI Tips",
+        variable=mode_var,
+        command=lambda: refresh_content(),
+        bg=bg_color,
+        fg=fg_color,
+        selectcolor=bg_color,
+        activebackground=bg_color,
+        activeforeground=fg_color,
+        font=("Helvetica", 10)
+    )
+    mode_button.pack(pady=10)
 
     # Canvas for the interactive orb
     canvas = tk.Canvas(main_container, width=300, height=300, bg=bg_color, 
@@ -365,20 +453,127 @@ def create_relaxing_frame(root):
     exit_button = tk.Button(
         frame, 
         text="← Exit", 
-        command=lambda: globe.app.show_frame("Main"),
-        bg="#B2DFDB",
-        fg="#004D40",
+        command=lambda: [globe.app.show_frame("Main"), refresh_content()],
+        bg=bg_color,
+        fg=fg_color,
         activebackground="#004D40",
         activeforeground="#B2DFDB",
         bd=2, 
         font=("Helvetica", 10),
-        padx=10,  # Add some horizontal padding
-        pady=5  # Add some vertical padding
+        padx=10,
+        pady=5
     )
-    exit_button.place(x=10, y=10)  # Position in top left with 10px padding
+    exit_button.place(x=10, y=10)
 
-    button = tk.Button()
-    # button.pack(pady=20, side=tk.BOTTOM)
+    # AI functionality setup
+    client = None
+    try:
+        client = openai.OpenAI(api_key="your-api-key-here")
+    except Exception as e:
+        print("OpenAI initialization error:", e)
+        mode_var.set(True)  # Fallback to local mode if API fails to initialize
+        mode_button.config(text="AI Unavailable (Using Local Tips)")
+
+    def get_ai_tip():
+        if not client:
+            return "AI service unavailable. Using local tips.", ""
+        
+        try:
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a calm and gentle assistant who shares simple relaxation tips."},
+                    {"role": "user", "content": "Give me one short and peaceful relaxation tip."}
+                ],
+                max_tokens=50,
+                temperature=0.7
+            )
+            tip = response.choices[0].message.content.strip()
+            return tip, "AI Suggestion"
+        except Exception as e:
+            print("OpenAI API error:", e)
+            return f"AI service unavailable. Error: {str(e)[:50]}...", "System Message"
+
+    def get_local_tip():
+        """Get a local tip that hasn't been shown recently"""
+        available_categories = list(relaxation_database.keys())
+        available_quotes = []
+        
+        # Flatten all quotes and filter out recently shown ones
+        for category in available_categories:
+            for quote, source in relaxation_database[category]:
+                if (quote, source) not in last_local_quotes:
+                    available_quotes.append((quote, source, category))
+        
+        if not available_quotes:
+            # If we've shown all quotes, reset the tracker
+            last_local_quotes.clear()
+            available_quotes = [(quote, source, category) 
+                              for category in available_categories
+                              for quote, source in relaxation_database[category]]
+        
+        # Select a random quote
+        selected_quote, selected_source, selected_category = random.choice(available_quotes)
+        
+        # Remember this quote so we don't show it again soon
+        last_local_quotes.append((selected_quote, selected_source))
+        if len(last_local_quotes) > 5:  # Keep track of last 5 shown quotes
+            last_local_quotes.pop(0)
+            
+        return selected_quote, selected_source
+
+    def display_tip(tip, source):
+        """Display the given tip and source in the tip container"""
+        # Clear existing tip
+        for widget in tip_container.winfo_children():
+            widget.destroy()
+
+        # Display the tip
+        tk.Label(
+            tip_container,
+            text=f'"{tip}"',
+            font=("Helvetica", 12),
+            bg=bg_color,
+            fg=fg_color,
+            wraplength=500,
+            justify="center"
+        ).pack()
+        
+        tk.Label(
+            tip_container,
+            text=f"~ {source}",
+            font=("Helvetica", 10, "italic"),
+            bg=bg_color,
+            fg="#00796B"
+        ).pack(pady=(5, 0))
+
+    def refresh_content():
+        """Refresh the content based on current mode"""
+        if mode_var.get():  # Local mode
+            tip, source = get_local_tip()
+            display_tip(tip, source)
+            mode_button.config(text="Switch to AI Tips")
+        else:  # AI mode
+            # Show loading message
+            for widget in tip_container.winfo_children():
+                widget.destroy()
+                
+            loading_label = tk.Label(
+                tip_container,
+                text="Fetching AI tip...",
+                font=("Helvetica", 12),
+                bg=bg_color,
+                fg=fg_color
+            )
+            loading_label.pack()
+
+            def fetch_and_display():
+                tip, source = get_ai_tip()
+                frame.after(0, lambda: display_tip(tip, source))
+                frame.after(0, lambda: mode_button.config(text="Switch to Local Tips"))
+
+            # Run the API call in a separate thread
+            threading.Thread(target=fetch_and_display, daemon=True).start()
 
     def update_theme(is_light):
         nonlocal bg_color, fg_color
@@ -394,55 +589,33 @@ def create_relaxing_frame(root):
         frame.config(bg=bg_color)
         main_container.config(bg=bg_color)
         quote_frame.config(bg=bg_color)
-        tips_container.config(bg=bg_color)
+        tip_container.config(bg=bg_color)
         title_label.config(bg=bg_color, fg=fg_color)
-        subtitle_label.config(bg=bg_color)
+        subtitle_label.config(bg=bg_color, fg="#00695C")
         instruction_label.config(bg=bg_color)
-        button.config(bg=bg_color, fg=fg_color, activebackground=fg_color, activeforeground=bg_color)
-        canvas.config(bg=bg_color)
+        exit_button.config(bg=bg_color, fg=fg_color, activebackground=fg_color)
+        mode_button.config(bg=bg_color, fg=fg_color, activebackground=bg_color)
 
-    def display_random_quotes():
-        # Clear existing tips
-        for widget in tips_container.winfo_children():
-            widget.destroy()
-
-        # Select and display random tips
-        selected_categories = random.sample(list(relaxation_database.keys()), 3)
-        selected_tips = [random.choice(relaxation_database[cat]) for cat in selected_categories]
-
-        for tip, source in selected_tips:
-            tip_frame = tk.Frame(tips_container, bg=bg_color)
-            tip_frame.pack(pady=10, fill='x')
-            
-            tk.Label(
-                tip_frame,
-                text=f'"{tip}"',
-                font=("Helvetica", 12),
-                bg=bg_color,
-                fg=fg_color,
-                wraplength=500,
-                justify="center"
-            ).pack()
-            
-            tk.Label(
-                tip_frame,
-                text=f"~ {source}",
-                font=("Helvetica", 10, "italic"),
-                bg=bg_color,
-                fg="#00796B"
-            ).pack(pady=(5, 0))
+        # Update all existing tip labels if any
+        for widget in tip_container.winfo_children():
+            if isinstance(widget, tk.Label):
+                widget.config(bg=bg_color)
+                if "italic" in widget.cget("font"):
+                    widget.config(fg="#00796B")  # Source color
+                else:
+                    widget.config(fg=fg_color)  # Tip text color
 
     # Function to call when frame is shown
     def on_show():
-        display_random_quotes()
+        refresh_content()
         if hasattr(globe, 'app') and globe.app is not None:
             update_theme(globe.app.isLight)
 
     frame.on_show = on_show
     frame.update_theme = update_theme
+    frame.refresh_content = refresh_content  # Expose refresh function
     
     # Initial display
     on_show()
     
     return frame
-
