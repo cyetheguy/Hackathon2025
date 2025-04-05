@@ -1,7 +1,6 @@
 import pygame
 
 # Initialize the mixer globally
-pygame.mixer.init()
 
 class AudioManager:
     def __init__(self):
@@ -20,10 +19,6 @@ class AudioManager:
         if sound_path:
             pygame.mixer.music.load(sound_path)
              # Set theme-specific volume
-            if theme == "dark":
-                pygame.mixer.music.set_volume(0.3)  # Rain super loud so decrease volume
+              # Rain super loud so decrease volume
 
             pygame.mixer.music.play(-1, fade_ms=2000)  # loop forever, fade in
-
-    def stop(self):
-        pygame.mixer.music.stop()

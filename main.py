@@ -1,11 +1,14 @@
 import tkinter as tk
 from tkinter import Menu
-from audio_file import AudioManager
-
+import pygame
 
 import globe
 import relax_menu
 import refute
+from audio_file import AudioManager
+
+pygame.mixer.init()
+pygame.mixer.music.set_volume(1)
 
 class App:
     def __init__(self, root):
@@ -16,6 +19,7 @@ class App:
         self.root.rowconfigure(0, weight=1)
         self.root.columnconfigure(0, weight=1)
         self.isLight:bool = True  # Default isLight is light
+        
 
         # Create frames
         self.frames = {
@@ -51,19 +55,30 @@ class App:
         self.root.config(menu=menu_bar)
 
         frame_menu = Menu(menu_bar, tearoff=0)
-        menu_bar.add_command(label="Toggle Theme", command=self.toggle_theme)
+        menu_bar.add_cascade(label="Themes", menu=frame_menu)
+        frame_menu.add_command(label="Light Theme", command=lambda: self.toggle_theme(True))
+        frame_menu.add_command(label="Dark Theme", command=lambda: self.toggle_theme(False))
+
+        audio_menu = Menu(menu_bar, tearoff=0)
+        menu_bar.add_cascade(label="Audio Volume", menu=audio_menu)
+        audio_menu.add_command(label="100%", command=lambda: pygame.mixer.music.set_volume(1))
+        audio_menu.add_command(label=" 50%", command=lambda: pygame.mixer.music.set_volume(0.5))
+        audio_menu.add_command(label=" 25%", command=lambda: pygame.mixer.music.set_volume(0.25))
+        audio_menu.add_command(label="Mute", command=lambda: pygame.mixer.music.set_volume(0))
 
     def show_frame(self, name):
         self.frames[name].tkraise()
 
-    def toggle_theme(self):
+    def toggle_theme(self, override:bool = None):
+        if (override != None):
+            self.isLight = override
         if self.isLight:
-            self.isLight = True
+            self.isLight = False
             bg_color = "#ffffff"
             fg_color = "#000000"
             self.audio.play_theme("light")
         else:
-            self.isLight = False
+            self.isLight = True
             bg_color = "#000000"
             fg_color = "#ffffff"
             self.audio.play_theme("dark")
