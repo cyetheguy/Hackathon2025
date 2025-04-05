@@ -10,6 +10,7 @@ message = None
 heated:float = 0
 last_sent = time.time()
 
+# Note: Copied from repository of English profanity/ banned words and phrases, we DO NOT CONDONE THE USE OF THEM
 bad_words = ["Arsehole",
 "Asshat",
 "Asshole",
@@ -114,22 +115,34 @@ def check_message() -> bool:
     global last_sent
     
     heated -= 0.1
-    ## check for spam
     msg = message.get()
     cur_time = time.time()
+    
+    # Track what triggered the warning
+    trigger_reason = ""
+    
+    ## check for spam
     if cur_time - last_sent < 10:
         heated += 1.1
+        trigger_reason = "spamming messages too quickly"
     last_sent = cur_time
 
+    # Check for bad words
     msg_low = set(msg.lower().split())
-
-    heated += 1.1*len((msg_low.intersection(word.lower() for word in bad_words)))
+    bad_words_count = len(msg_low.intersection(word.lower() for word in bad_words))
+    heated += 1.1 * bad_words_count
+    if bad_words_count > 0:
+        trigger_reason = "using inappropriate language" if not trigger_reason else f"{trigger_reason} and using inappropriate language"
 
     if heated > 9:
-        messagebox.showwarning("Chill Out", "Your actions are not calm.\nTake a chill pill, homie.")
-        print(heated)
-        globe.app.entre_chill_mode()
+        # Default message if for some reason we don't have a specific reason
+        warning_msg = "Your actions are not calm. Take a chill pill, homie."
         
-
-
+        if trigger_reason:
+            warning_msg = f"Please calm down - you're {trigger_reason}.\nTake a moment to relax before continuing."
+            
+        messagebox.showwarning("Chill Out", warning_msg)
+        print(heated)
+        globe.app.enter_chill_mode()
+    
     globe.conversation.send_message(msg)
