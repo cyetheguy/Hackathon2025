@@ -142,7 +142,6 @@ def check_message() -> bool:
             warning_msg = f"Please calm down - you're {trigger_reason}.\nTake a moment to relax before continuing."
             
         messagebox.showwarning("Chill Out", warning_msg)
-        print(heated)
         globe.app.enter_chill_mode()
     
     globe.conversation.send_message(msg)

@@ -158,7 +158,7 @@ class App:
         self.fg_color = fg_target
         self.highlight = highlight_temp
     
-    def entre_chill_mode(self) -> None:
+    def enter_chill_mode(self) -> None:
         bg_target = globe.ice
         fg_target = globe.dark_ice
         hglt_target = globe.blue
@@ -181,7 +181,7 @@ class App:
                 refute.heated -=1
                 start_time = cur_time
 
-        self.toggle_theme(self.isLight)
+        self.toggle_theme(not self.isLight)
 
 # Run the application
 if __name__ == "__main__":
