@@ -7,6 +7,7 @@ from globe import lerp_to_hex, rgb_to_hex
 import relax_menu
 import refute
 from audio_file import AudioManager
+import client
 
 pygame.mixer.init()
 pygame.mixer.music.set_volume(1)
@@ -20,6 +21,7 @@ class App:
         self.root.rowconfigure(0, weight=1)
         self.root.columnconfigure(0, weight=1)
         self.isLight:bool = True  # Default isLight is light
+        self.client = client.Client('127.0.0.1', 7633)
         
         # Colors
         self.bg_color = globe.black
@@ -81,7 +83,7 @@ class App:
         if self.isLight:
             self.isLight = False
             bg_target = globe.teal
-            fg_target = globe.purple
+            fg_target = globe.dark_turquoise
             hglt_target = globe.white
             self.audio.play_theme("light")
         else:

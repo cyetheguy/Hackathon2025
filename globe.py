@@ -4,7 +4,8 @@ app = None
 ## colors
 white = (255, 255, 255)
 black = (0,0,0)
-teal = (120, 205, 190)
+teal = (178, 223, 219)
+dark_turquoise = (0, 77, 64)
 purple = (165, 120, 205)
 stormy_gray = (25, 25, 25)
 gray = (105, 105, 105)

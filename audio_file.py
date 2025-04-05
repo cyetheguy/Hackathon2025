@@ -6,8 +6,8 @@ class AudioManager:
     def __init__(self):
         self.current_sound = None
         self.sounds = {
-            "light": "waves.mp3", 
-            "dark": "rain.mp3"
+            "light": ".\\media\waves.mp3", 
+            "dark": ".\\media\\rain.mp3"
         }
 
     def play_theme(self, theme: str):
