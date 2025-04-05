@@ -1,5 +1,7 @@
+## main app
 app = None
 
+## colors
 white = (255, 255, 255)
 black = (0,0,0)
 teal = (120, 205, 190)
@@ -7,6 +9,9 @@ purple = (165, 120, 205)
 stormy_gray = (25, 25, 25)
 gray = (105, 105, 105)
 razorback = (157, 34, 53)
+
+## fonts
+title_font = ("Papyrus", 60)
 
 def lerp(tuple1, tuple2, t):
     if not (0 <= t <= 1):

@@ -45,7 +45,7 @@ class App:
     def create_main(self):
         frame = tk.Frame(self.root)
         frame.grid(row=0, column=0, sticky="nsew")
-        label = tk.Label(frame, text="Relax and Refute", font=("Impact", 32))
+        label = tk.Label(frame, text="Relax and Refute", font=globe.title_font)
         label.pack(pady=50)
         button_frame = tk.Frame(frame)
         button_frame.pack(pady=50, anchor="center")
