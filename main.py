@@ -119,6 +119,8 @@ class App:
                 widget.config(bg=bgColor, fg=fgColor)
             if isinstance(widget, tk.Button):
                 widget.config(background=bgColor, activebackground=hgltColor, foreground=fgColor, borderwidth=3)
+            if isinstance(widget, tk.Checkbutton):
+                widget.config(background=bgColor, activebackground=hgltColor, foreground=fgColor, borderwidth=3)
         self.root.after(1, root.update_idletasks())
 
     def apply_theme_canvas(self, frame, bgColor, fgColor, hgltColor) -> None:

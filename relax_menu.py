@@ -533,8 +533,6 @@ def create_relaxing_frame(root):
             tip_container,
             text=f'"{tip}"',
             font=("Helvetica", 12),
-            bg=bgColor,
-            fg=fg_color,
             wraplength=500,
             justify="center"
         ).pack()
@@ -543,16 +541,14 @@ def create_relaxing_frame(root):
             tip_container,
             text=f"~ {source}",
             font=("Helvetica", 10, "italic"),
-            bg=bgColor,
-            fg="#00796B"
+
         ).pack(pady=(5, 0))
 
     def refresh_content():
         """Refresh the content based on current mode"""
-        if mode_var.get():  # Local mode
+        if not mode_var.get():  # Local mode
             tip, source = get_local_tip()
             display_tip(tip, source)
-            mode_button.config(text="Switch to AI Tips")
         else:  # AI mode
             # Show loading message
             for widget in tip_container.winfo_children():
@@ -562,15 +558,13 @@ def create_relaxing_frame(root):
                 tip_container,
                 text="Fetching AI tip...",
                 font=("Helvetica", 12),
-                bg=bgColor,
-                fg=fg_color
             )
             loading_label.pack()
 
             def fetch_and_display():
                 tip, source = get_ai_tip()
                 frame.after(0, lambda: display_tip(tip, source))
-                frame.after(0, lambda: mode_button.config(text="Switch to Local Tips"))
+            
 
             # Run the API call in a separate thread
             threading.Thread(target=fetch_and_display, daemon=True).start()
