@@ -1,42 +1,67 @@
 import socket
-import threading
+from threading import Thread
 
-clients = []  # List to keep track of connected clients
+class Server:
+    rooms = {}  # Dictionary to store rooms and their clients
 
-def handle_client(client_socket, client_address):
-    print(f"Connection established with {client_address}")
-    while True:
-        try:
-            message = client_socket.recv(1024).decode()  # Receive message from client
-            if message.lower() == 'bye':  # Disconnect condition
-                print(f"{client_address} disconnected.")
-                clients.remove(client_socket)
+    def __init__(self, HOST, PORT):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((HOST, PORT))
+        self.server_socket.listen(5)
+        print('Server waiting for connection...')
+
+    def listen(self):
+        while True:
+            client_socket, address = self.server_socket.accept()
+            print("Connection from " + str(address))
+
+            client_name = client_socket.recv(1024).decode()
+            room_id = self.get_room_for_client()
+            client = {"client_name": client_name, 'client_socket': client_socket, 'room_id': room_id}
+            
+            # Add client to the room
+            if room_id not in Server.rooms:
+                Server.rooms[room_id] = []
+            Server.rooms[room_id].append(client)
+            # Broadcast to others in the same room that a new client has joined
+            self.broadcast_message(client_name, client_name + " has joined the room", room_id)
+
+
+            Thread(target=self.handle_new_client, args=(client,)).start()
+
+    def get_room_for_client(self):
+        # Check if there is an available room with less than 2 clients
+        for room_id, clients in Server.rooms.items():
+            if len(clients) < 2:
+                return room_id
+        # If not create a new room
+        new_room_id = len(Server.rooms) + 1
+        return str(new_room_id)
+
+    def handle_new_client(self, client):
+        client_name = client['client_name']
+        client_socket = client['client_socket']
+        room_id = client['room_id']
+
+        while True:
+            client_message = client_socket.recv(1024).decode()
+
+            # If the message is "bye", remove the client and close the socket
+            if client_message.strip() == client_name + ": bye" or not client_message.strip():
+                self.broadcast_message(client_name, client_name + " has left the room", room_id)
+                Server.rooms[room_id].remove(client)
                 client_socket.close()
                 break
+            else:
+                # Broadcast the message to others in the same room
+                self.broadcast_message(client_name, client_message, room_id)
 
-            # Relay the message to the other client
-            for other_client in clients:
-                if other_client != client_socket:
-                    other_client.send(message.encode())
-        except:
-            print(f"Error with client {client_address}.")
-            clients.remove(client_socket)
-            client_socket.close()
-            break
+    def broadcast_message(self, sender_name, message, room_id):
+        for client in Server.rooms[room_id]:
+            client_socket = client['client_socket']
+            if client['client_name'] != sender_name:
+                client_socket.send(message.encode())
 
-def start_server():
-    host = '127.0.0.1'  # Localhost
-    port = 5000         # Arbitrary port number
-
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind((host, port))
-    server_socket.listen(2)  # Listen for up to two clients
-    print("Server is waiting for connections...")
-
-    while len(clients) < 2:  # Accept up to two clients
-        client_socket, client_address = server_socket.accept()
-        clients.append(client_socket)
-        threading.Thread(target=handle_client, args=(client_socket, client_address)).start()
-
-if __name__ == "__main__":
-    start_server()
+if __name__ == '__main__':
+    server = Server('127.0.0.1', 7633)
+    server.listen()
