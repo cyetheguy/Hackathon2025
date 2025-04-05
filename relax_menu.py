@@ -5,7 +5,6 @@ import globe
 import threading
 import time
 import math
-import openai
 from itertools import cycle
 import main
 
