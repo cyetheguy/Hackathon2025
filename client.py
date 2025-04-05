@@ -11,7 +11,7 @@ class Client:
         try:
             self.socket.connect((HOST, PORT))
         except:
-            messagebox.showwarning("404 - Server not found", "You were unable to connect to a server.\nRefute mode is turned off.")
+            messagebox.showwarning("404 - Server not found", "You were unable to connect to a server.\nRefute mode will not function properly.")
         ##self.name = input("Enter your name: ") 
         ##self.talk_to_server()
 
