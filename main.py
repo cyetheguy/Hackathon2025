@@ -5,6 +5,7 @@ from audio_file import AudioManager
 
 import globe
 import relax_menu
+import refute
 
 class App:
     def __init__(self, root):
@@ -20,7 +21,7 @@ class App:
         self.frames = {
             "Main": self.create_main(),
             "Relax": relax_menu.create_relaxing_frame(self.root),
-            "Refute": self.create_main(),
+            "Refute": refute.create_frame(self.root),
         }
 
         # Create menu
