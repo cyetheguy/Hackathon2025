@@ -12,4 +12,4 @@ Team Members:
 @joseph umuhoza - Joseph Umuhoza
 
 
-What's the least relaxing thing you can think of? Debate is probably close to the top of that list. Well with Recline and Refute, you can have a heated debate with other user's about any topic as you try to refute their claims, and then get your zen on with the relaxation and meditation assisting screen.
+What is the most relaxing thing you can think of? Debate is probably close to the bottom of that list. Well with Recline and Refute, you can have a heated debate with other users, and then get your zen on with the relaxation and meditation assisting features.
