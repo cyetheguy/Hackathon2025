@@ -1,5 +1,4 @@
 import pygame
-import threading
 
 # Initialize the mixer globally
 pygame.mixer.init()
