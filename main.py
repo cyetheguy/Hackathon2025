@@ -3,6 +3,7 @@ from tkinter import Menu
 import pygame
 
 import globe
+from globe import lerp_to_hex, rgb_to_hex
 import relax_menu
 import refute
 from audio_file import AudioManager
@@ -19,6 +20,10 @@ class App:
         self.root.rowconfigure(0, weight=1)
         self.root.columnconfigure(0, weight=1)
         self.isLight:bool = True  # Default isLight is light
+        
+        # Colors
+        self.bg_color = globe.black
+        self.fg_color = globe.black
         
 
         # Create frames
@@ -74,23 +79,29 @@ class App:
             self.isLight = override
         if self.isLight:
             self.isLight = False
-            bg_color = "#ffffff"
-            fg_color = "#000000"
+            bg_target = globe.teal
+            fg_target = globe.purple
             self.audio.play_theme("light")
         else:
             self.isLight = True
-            bg_color = "#000000"
-            fg_color = "#ffffff"
+            bg_target = globe.black
+            fg_target = globe.white
             self.audio.play_theme("dark")
 
-        self.root.config(bg="black")
-        for frame in self.frames.values():
-            frame.config(bg=bg_color)
-            for widget in frame.winfo_children():
-                if isinstance(widget, tk.Frame):
-                    widget.config(bg=bg_color)
-                if isinstance(widget, tk.Label):
-                    widget.config(bg=bg_color, fg=fg_color)
+        for i in range(0, 100):
+            bg_temp = lerp_to_hex(self.bg_color, bg_target, i/100)
+            fg_temp = lerp_to_hex(self.fg_color, fg_target, i/100)
+            self.root.config(bg=bg_temp)
+            for frame in self.frames.values():
+                frame.config(bg=bg_temp)
+                for widget in frame.winfo_children():
+                    if isinstance(widget, tk.Frame):
+                        widget.config(bg=bg_temp)
+                    if isinstance(widget, tk.Label):
+                        widget.config(bg=bg_temp, fg=fg_temp)
+            root.after(10, root.update_idletasks())
+        self.bg_color = bg_target
+        self.fg_color = fg_target
 
 # Run the application
 if __name__ == "__main__":
