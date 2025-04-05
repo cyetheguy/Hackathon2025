@@ -1,34 +1,31 @@
 import socket
-import threading
+from threading import Thread
+import os
 
-def receive_messages(client_socket):
-    while True:
-        try:
-            message = client_socket.recv(1024).decode()  # Receive message from server
-            print(f"Other Client: {message}")
-        except:
-            print("Disconnected from server.")
-            client_socket.close()
-            break
+class Client:
+    def __init__(self, HOST, PORT):
+        self.socket = socket.socket()
+        self.socket.connect((HOST, PORT))
+        self.name = input("Enter your name: ")  # Fixed typo "imput" to "input"
+        self.talk_to_server()
 
-def start_client():
-    host = '127.0.0.1'  # Localhost
-    port = 5000         # Same port as the server
+    def talk_to_server(self):
+        self.socket.send(self.name.encode())
+        Thread(target=self.receive_message).start()
+        self.send_message()
 
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client_socket.connect((host, port))
-    print("Connected to the server!")
+    def send_message(self):
+        while True:
+            client_input = input("")
+            client_message = self.name + ": " + client_input  # Added space after ":"
+            self.socket.send(client_message.encode())
 
-    # Start a thread to receive messages
-    threading.Thread(target=receive_messages, args=(client_socket,)).start()
-
-    while True:
-        client_message = input("You: ")
-        client_socket.send(client_message.encode())  # Send message to server
-        if client_message.lower() == 'bye':  # Disconnect condition
-            print("Disconnected from the server.")
-            client_socket.close()
-            break
+    def receive_message(self):
+        while True:
+            server_message = self.socket.recv(1024).decode()
+            if not server_message.strip():
+                os._exit(0)
+            print(server_message)  # Added to print the received message
 
 if __name__ == "__main__":
-    start_client()
+    client = Client('127.0.0.1', 7633)
