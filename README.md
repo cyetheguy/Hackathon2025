@@ -3,7 +3,7 @@ This is the README for Relax and Refute, a software with two opposite functional
 What is the most relaxing thing you can think of? Debate is probably close to the bottom of that list. Well with Recline and Refute, you can have a heated debate with other users, and then get your zen on with the relaxation and meditation assisting features.
 <br><br>
 
-### Installations
+# Installations
 ## Pygame
 The *pygame* package is used for audio playback. This is the following command for installing pygame using *PIP*:<br><br>
 ```pip install pygame```<br>
