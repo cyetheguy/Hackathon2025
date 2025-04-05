@@ -22,4 +22,4 @@ Their use is completely in line with Pixabay's content liscence
 
 Other songs borrowed off YouTube.
 
-# Note: The list of bad words was copied from repository of English profanity/ banned words and phrases, we DO NOT CONDONE THE USE OF THEM
+Note: The list of bad words was copied from repository of English profanity/ banned words and phrases, we DO NOT CONDONE THE USE OF THEM
