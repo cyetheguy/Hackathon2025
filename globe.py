@@ -30,3 +30,10 @@ def rgb_to_hex(rgb):
 def lerp_to_hex(color1:tuple, color2:tuple, a:int) -> str:
     lerp_tup = lerp(color1, color2, a)
     return rgb_to_hex(lerp_tup)
+
+def omni_dir(img:str) -> str:
+    if platform == "windows":
+        return f".\\media\\{img}"
+    else:
+        return f"./media/{img}"
+

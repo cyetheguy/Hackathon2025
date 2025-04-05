@@ -6,8 +6,8 @@ class AudioManager:
     def __init__(self):
         self.current_sound = None
         self.sounds = {
-            "light": ".\\media\waves.mp3", 
-            "dark": ".\\media\\rain.mp3"
+            "light": "waves.mp3", 
+            "dark": "rain.mp3"
         }
 
     def play_theme(self, theme: str):
@@ -17,7 +17,7 @@ class AudioManager:
 
         sound_path = self.sounds.get(theme)
         if sound_path:
-            pygame.mixer.music.load(sound_path)
+            pygame.mixer.music.load(omni_dir(sound_path))
              # Set theme-specific volume
               # Rain super loud so decrease volume
 
