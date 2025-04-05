@@ -11,7 +11,7 @@ class Conversation:
         self.main_frame.grid(row=1, column=1, sticky="nsew")
 
         # Create a canvas widget and attach a scrollbar
-        self.canvas = tk.Canvas(self.main_frame, borderwidth=0)
+        self.canvas = tk.Canvas(self.main_frame, borderwidth=0, highlightthickness=0)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
         self.scrollbar = ttk.Scrollbar(self.main_frame, orient="vertical", command=self.canvas.yview)
@@ -28,6 +28,7 @@ class Conversation:
         self.canvas.bind("<Configure>", self.on_canvas_configure)
 
     def add_message(self, text, align_right):
+        globe.app.update_theme()
         # Create a container for the individual message row.
         msg_frame = tk.Frame(self.inner_frame)
         msg_frame.pack(fill=tk.X, padx=10, pady=5)
@@ -39,13 +40,13 @@ class Conversation:
             dummy = tk.Label(msg_frame, text="")
             dummy.grid(row=0, column=0, sticky="w")
             # Place the actual message in column 1.
-            label = tk.Label(msg_frame, text=text, bg="lightblue", padx=10, relief="solid")
+            label = tk.Label(msg_frame, text=text, padx=10, relief="solid")
             label.grid(row=0, column=1, sticky="e")
         else:
             # For left alignment, let column 1 take up extra space.
             msg_frame.columnconfigure(1, weight=1)
             # Place the message label in column 0.
-            label = tk.Label(msg_frame, text=text, bg="lightgrey", padx=10, relief="solid")
+            label = tk.Label(msg_frame, text=text, padx=10, relief="solid")
             label.grid(row=0, column=0, sticky="w")
             # Create an empty label in column 1 to push the message left.
             dummy = tk.Label(msg_frame, text="")

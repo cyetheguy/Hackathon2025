@@ -88,17 +88,46 @@ class App:
             self.username.set(askstring("Enter Username", "Who are you?\nYou will be connect shortly."))
             globe.client.set_name(self.username.get())
 
+    def update_theme(self, bgColor=None, fgColor=None, hgltColor=None) -> None:
+        if not bgColor:
+            bgColor = rgb_to_hex(self.bg_color)
+        if not fgColor:
+            fgColor = rgb_to_hex(self.fg_color)
+        if not hgltColor:
+            hgltColor = rgb_to_hex(self.hglt_color)
+        for frame in self.frames.values():
+                self.apply_theme(frame, bgColor, fgColor, hgltColor)
+
     def apply_theme(self, frame, bgColor, fgColor, hgltColor) -> None:
         frame.config(bg=bgColor)
         for widget in frame.winfo_children():
             if isinstance(widget, tk.Frame):
-                widget.config(bg=bgColor)
                 self.apply_theme(widget, bgColor,fgColor,hgltColor)
+            if isinstance(widget, tk.Canvas):
+                self.apply_theme_canvas(widget, bgColor, fgColor, hgltColor)
             if isinstance(widget, tk.Label):
                 widget.config(bg=bgColor, fg=fgColor)
             if isinstance(widget, tk.Button):
                 widget.config(background=bgColor, activebackground=hgltColor, foreground=fgColor, borderwidth=3)
-        self.root.after(10, root.update_idletasks())
+        self.root.after(1, root.update_idletasks())
+
+    def apply_theme_canvas(self, frame, bgColor, fgColor, hgltColor) -> None:
+        frame.config(bg=bgColor)
+        for widget in frame.winfo_children():
+            if isinstance(widget, tk.Frame):
+                self.apply_theme_canvas(widget, bgColor,fgColor,hgltColor)
+            if isinstance(widget, tk.Frame):
+                widget.config(bg=bgColor)
+            if isinstance(widget, tk.Label):
+                if not widget.cget("text"):
+                    widget.config(bg=bgColor, fg=fgColor)
+                elif widget.grid_info()["sticky"] == 'e':
+                    if not self.isLight:
+                        widget.config(bg=rgb_to_hex(globe.dark_turquoise), fg=rgb_to_hex(globe.white))
+                    else:
+                        widget.config(bg = rgb_to_hex(globe.razorback), fg = rgb_to_hex(globe.white))
+                else:
+                    widget.config(bg=rgb_to_hex(globe.gray),fg=rgb_to_hex(globe.black))
 
 
     def toggle_theme(self, override:bool = None):
