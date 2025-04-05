@@ -1,11 +1,15 @@
 import socket
 from threading import Thread
 import os
+from tkinter import messagebox
 
 class Client:
     def __init__(self, HOST, PORT):
         self.socket = socket.socket()
-        self.socket.connect((HOST, PORT))
+        try:
+            self.socket.connect((HOST, PORT))
+        except:
+            messagebox.showwarning("404 - Server not found", "You were unable to connect to a server.\nRefute mode is turned off.")
         ##self.name = input("Enter your name: ") 
         ##self.talk_to_server()
 

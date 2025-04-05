@@ -109,6 +109,15 @@ class App:
                 for widget in frame.winfo_children():
                     if isinstance(widget, tk.Frame):
                         widget.config(bg=bg_temp)
+                        for frame in self.frames.values():
+                            frame.config(bg=bg_temp)
+                            for mini_widget in widget.winfo_children():
+                                if isinstance(mini_widget, tk.Frame):
+                                    mini_widget.config(bg=bg_temp)
+                                if isinstance(mini_widget, tk.Label):
+                                    mini_widget.config(bg=bg_temp, fg=fg_temp)
+                                if isinstance(mini_widget, tk.Button):
+                                    mini_widget.config(background=bg_temp, activebackground=highlight_temp, foreground=fg_temp, borderwidth=3)
                     if isinstance(widget, tk.Label):
                         widget.config(bg=bg_temp, fg=fg_temp)
                     if isinstance(widget, tk.Button):
