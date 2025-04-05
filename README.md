@@ -22,3 +22,7 @@ Dark mode's "Night Rain with Distant Thunder" Sound Effect by Mind Mist from Pix
 Light Mode's "Gentle Ocean Waves Mix (2018)" Sound Effect by freesound_community from Pixabay
 
 Their use is completely in line with Pixabay's content liscence
+
+### Pygame
+The *pygame* package is used for audio playback. This is the following command for installing pygame using *PIP*:<br><br>
+```pip install pygame```<br>
