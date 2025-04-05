@@ -3,6 +3,7 @@ from tkinter.simpledialog import askstring
 from tkinter import Menu, messagebox
 import pygame
 import threading
+import time
 
 import globe
 from globe import lerp_to_hex, rgb_to_hex
@@ -133,7 +134,7 @@ class App:
     def toggle_theme(self, override:bool = None):
         if (override != None):
             self.isLight = override
-        if self.isLight:
+        elif self.isLight:
             self.isLight = False
             bg_target = globe.teal
             fg_target = globe.dark_turquoise
@@ -156,6 +157,31 @@ class App:
         self.bg_color = bg_target
         self.fg_color = fg_target
         self.highlight = highlight_temp
+    
+    def entre_chill_mode(self) -> None:
+        bg_target = globe.ice
+        fg_target = globe.dark_ice
+        hglt_target = globe.blue
+    
+        for i in range(0, 100):
+                bg_temp = lerp_to_hex(self.bg_color, bg_target, i/100)
+                fg_temp = lerp_to_hex(self.fg_color, fg_target, i/100)
+                highlight_temp = lerp_to_hex(self.hglt_color, hglt_target, i/100)
+                self.root.config(bg=bg_temp)
+                for frame in self.frames.values():
+                    self.apply_theme(frame, bg_temp, fg_temp, highlight_temp)
+        self.bg_color = bg_target
+        self.fg_color = fg_target
+        self.highlight = highlight_temp
+
+        start_time = time.time()
+        while refute.heated > 5:
+            cur_time = time.time()
+            if (cur_time-start_time >= 0.1):
+                refute.heated -=1
+                start_time = cur_time
+
+        self.toggle_theme(self.isLight)
 
 # Run the application
 if __name__ == "__main__":

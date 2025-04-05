@@ -14,6 +14,11 @@ stormy_gray = (25, 25, 25)
 gray = (105, 105, 105)
 razorback = (157, 34, 53)
 
+ice = (109, 183, 252)
+dark_ice = (60, 97, 133)
+blue = (0, 0, 255)
+
+
 ## fonts
 title_font = ("Papyrus", 60)
 

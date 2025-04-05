@@ -1,10 +1,79 @@
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
+import time
 
 import globe
 import client
 
 message = None
+heated:float = 0
+last_sent = time.time()
+
+bad_words = ["Arsehole",
+"Asshat",
+"Asshole",
+"Bastard",
+"Big black cock",
+"Bitch",
+"Bloody",
+"Blowjob",
+"Bollocks",
+"Bugger",
+"Bullshit",
+"Chicken shit",
+"Clusterfuck",
+"Cock",
+"Cocksucker",
+"Coonass",
+"Cornhole",
+"Cox–Zucker machine",
+"Cracker",
+"Crap",
+"Cunt",
+"Damn",
+"Dick",
+"Dumbass",
+"Enshittification",
+"Faggot",
+"Feck",
+"Fuck",
+"Fuck her right in the pussy",
+"Fuck Joe Biden",
+"Fuck, marry, kill",
+"Fuckery",
+"Grab \'em by the pussy",
+"Healslut",
+"If You See Kay",
+"Jesus fucking christ",
+"Kike",
+"Motherfucker",
+"Nigga",
+"Nigger",
+"Paki",
+"Poof",
+"Poofter",
+"Prick",
+"Pussy",
+"Ratfucking",
+"Retard",
+"Russian warship, go fuck yourself",
+"Serving cunt",
+"Shit",
+"Shit happens",
+"Shithouse",
+"Shitposting",
+"Shitter",
+"Shut the fuck up",
+"Shut the hell up",
+"Slut",
+"Son of a bitch",
+"Spic",
+"Taking the piss",
+"Twat",
+"Unclefucker",
+"Wanker",
+"Whore"]
 
 def create_frame(root):
     global message
@@ -33,7 +102,34 @@ def create_frame(root):
     bottom_left_entry.grid(row=2, column=0, columnspan=2, sticky="sw", padx=10, pady=10)
     
     # Add a button in the bottom-right corner
-    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12), command=lambda: globe.conversation.send_message(message.get()))
+    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12), command=check_message)
     bottom_right_button.grid(row=2, column=2, sticky="se", padx=10, pady=10)
     
     return frame
+
+def check_message() -> bool:
+    global message
+    global bad_words
+    global heated
+    global last_sent
+    
+    heated -= 0.1
+    ## check for spam
+    msg = message.get()
+    cur_time = time.time()
+    if cur_time - last_sent < 10:
+        heated += 1.1
+    last_sent = cur_time
+
+    msg_low = set(msg.lower().split())
+
+    heated += 1.1*len((msg_low.intersection(word.lower() for word in bad_words)))
+
+    if heated > 9:
+        messagebox.showwarning("Chill Out", "Your actions are not calm.\nTake a chill pill, homie.")
+        print(heated)
+        globe.app.entre_chill_mode()
+        
+
+
+    globe.conversation.send_message(msg)
