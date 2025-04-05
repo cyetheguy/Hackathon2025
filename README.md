@@ -1,7 +1,9 @@
 # Hackathon2025
 
 Team Name: Team SUWY
+
 Project Name: Recline and Refute
+
 Description: A meditation software with a debate option. Users are encouraged to relax and watch, or pertake in civil conversations. If debates get too heated, a "chill" mode forces the user into a mediation state.
 
 Team Members:
