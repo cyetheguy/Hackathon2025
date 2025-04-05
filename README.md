@@ -6,7 +6,9 @@ Description: A meditation software with a debate option. Users are encouraged to
 
 Team Members:
 @ct5k  - Caleb Young
+
 @Putter - Charles Williams
+
 @joseph umuhoza - Joseph Umuhoza
 
 
