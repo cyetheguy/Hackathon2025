@@ -365,7 +365,6 @@ def create_relaxing_frame(root):
 
     # Add a button in the top-left corner
     top_left_button = tk.Button(frame, text="< Exit Relaxation", 
-        text="Exit Relaxation", 
         command=lambda: globe.app.show_frame("Main"),
         bg=bg_color,
         fg=fg_color,
