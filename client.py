@@ -85,6 +85,6 @@ class Client:
                 continue
 
 if __name__ == "__main__":
-    client = Client('127.0.0.1', 7633)
+    client = Client('172.20.10.6', 7633)
     client.name = input("Enter your name: ")  
     client.talk_to_server()
