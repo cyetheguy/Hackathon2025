@@ -13,3 +13,10 @@ Team Members:
 
 
 What is the most relaxing thing you can think of? Debate is probably close to the bottom of that list. Well with Recline and Refute, you can have a heated debate with other users, and then get your zen on with the relaxation and meditation assisting features.
+
+Enjoy stronger light and dark theming than usual with corresponding sounds to further create a relaxing ambience
+
+Dark mode's "Night Rain with Distant Thunder" Sound Effect by Mind Mist from Pixabay
+Light Mode's "Gentle Ocean Waves Mix (2018)" Sound Effect by freesound_community from Pixabay
+
+Their use is completely in line with Pixabay's content liscence
