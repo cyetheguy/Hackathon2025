@@ -475,9 +475,11 @@ def create_relaxing_frame(root):
                 client = openai.OpenAI(api_key="your-api-key-here")
             except Exception as e:
                 print("OpenAI initialization error:", e)
+                print("OpenAI API error:", e)
                 mode_var.set(True)  # Fallback to local mode if API fails to initialize
                 mode_button.config(text="AI Unavailable (Using Local Tips)")
-            return "AI service unavailable. Using local tips.", ""
+            return f"AI service unavailable. Error: {str(e)[:150]}...", "System Message"
+
         
         try:
             response = client.chat.completions.create(
