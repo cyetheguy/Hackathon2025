@@ -2,6 +2,7 @@ from sys import platform
 ## main app
 app = None
 client = None
+conversation = None
 
 ## colors
 white = (255, 255, 255)

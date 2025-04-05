@@ -19,12 +19,6 @@ def create_frame(root):
     frame.grid_columnconfigure(0, weight=1)
     frame.grid_columnconfigure(1, weight=1)
     frame.grid_columnconfigure(2, weight=1)
-
-
-    ## conversation box
-    conversation = tk.Canvas(frame)
-    conversation.grid(row=1, column=1, rowspan=2, sticky="nsew")
-    scrollbar = ttk.Scrollbar(conversation, orient="vertical", command=conversation.yview)
     
     # Add a button in the top-left corner
     top_left_button = tk.Button(frame, text="< Exit ", font=("Arial", 12), command=lambda: globe.app.show_frame("Main"))
@@ -39,7 +33,7 @@ def create_frame(root):
     bottom_left_entry.grid(row=2, column=0, columnspan=2, sticky="sw", padx=10, pady=10)
     
     # Add a button in the bottom-right corner
-    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12), command=lambda: globe.client.send_m(message.get()))
+    bottom_right_button = tk.Button(frame, text="Send", font=("Arial", 12), command=lambda: globe.conversation.send_message(message.get()))
     bottom_right_button.grid(row=2, column=2, sticky="se", padx=10, pady=10)
     
     return frame

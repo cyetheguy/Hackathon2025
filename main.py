@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter.simpledialog import askstring
 from tkinter import Menu, messagebox
 import pygame
+import threading
 
 import globe
 from globe import lerp_to_hex, rgb_to_hex
@@ -9,6 +10,7 @@ import relax_menu
 import refute
 from audio_file import AudioManager
 import client
+import conversation
 
 pygame.mixer.init()
 pygame.mixer.music.set_volume(1)
@@ -37,6 +39,8 @@ class App:
             "Relax": relax_menu.create_relaxing_frame(self.root),
             "Refute": refute.create_frame(self.root),
         }
+
+        globe.conversation = conversation.Conversation(self.frames["Refute"])
 
         # Show the main frame by default
         self.show_frame("Main")
@@ -129,4 +133,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     globe.app = App(root)
     globe.client = client.Client('127.0.0.1', 7633)
+    client_thread = threading.Thread(target=globe.client.receive_message)
+    client_thread.start()
     root.mainloop()
