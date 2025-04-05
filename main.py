@@ -24,6 +24,7 @@ class App:
         # Colors
         self.bg_color = globe.black
         self.fg_color = globe.black
+        self.hglt_color = globe.white
         
 
         # Create frames
@@ -44,7 +45,7 @@ class App:
     def create_main(self):
         frame = tk.Frame(self.root)
         frame.grid(row=0, column=0, sticky="nsew")
-        label = tk.Label(frame, text="Relax and Refute", font=("Arial", 16))
+        label = tk.Label(frame, text="Relax and Refute", font=("Impact", 32))
         label.pack(pady=50)
         button_frame = tk.Frame(frame)
         button_frame.pack(pady=50, anchor="center")
@@ -81,16 +82,19 @@ class App:
             self.isLight = False
             bg_target = globe.teal
             fg_target = globe.purple
+            hglt_target = globe.white
             self.audio.play_theme("light")
         else:
             self.isLight = True
-            bg_target = globe.black
+            bg_target = globe.stormy_gray
             fg_target = globe.white
+            hglt_target = globe.razorback
             self.audio.play_theme("dark")
 
         for i in range(0, 100):
             bg_temp = lerp_to_hex(self.bg_color, bg_target, i/100)
             fg_temp = lerp_to_hex(self.fg_color, fg_target, i/100)
+            highlight_temp = lerp_to_hex(self.hglt_color, hglt_target, i/100)
             self.root.config(bg=bg_temp)
             for frame in self.frames.values():
                 frame.config(bg=bg_temp)
@@ -99,9 +103,12 @@ class App:
                         widget.config(bg=bg_temp)
                     if isinstance(widget, tk.Label):
                         widget.config(bg=bg_temp, fg=fg_temp)
-            root.after(10, root.update_idletasks())
+                    if isinstance(widget, tk.Button):
+                        widget.config(background=bg_temp, activebackground=highlight_temp, foreground=fg_temp, borderwidth=3)
+            self.root.after(10, root.update_idletasks())
         self.bg_color = bg_target
         self.fg_color = fg_target
+        self.highlight = highlight_temp
 
 # Run the application
 if __name__ == "__main__":
