@@ -2,6 +2,15 @@
 This is the README for Relax and Refute, a software with two opposite functionalities.<br><br>
 What is the most relaxing thing you can think of? Debate is probably close to the bottom of that list. Well with Recline and Refute, you can have a heated debate with other users, and then get your zen on with the relaxation and meditation assisting features.
 <br><br>
+
+## Pygame
+The *pygame* package is used for audio playback. This is the following command for installing pygame using *PIP*:<br><br>
+```pip install pygame```<br>
+
+## OpenAI
+The *OpenAI* package is used for our conditional AI features, which reuqire a secret AI API key and tokens to function. This is the following command for installing OpenAI using *PIP*:<br><br>
+```pip install openai```<br>
+
 # How To Run
 To run the program ***manually***, ensure your terminal is within the directory of the project. Once you have navigated to the correct directory, run the following command within your terminal:<br><br>
 ```python3 main.py```<br><br>
