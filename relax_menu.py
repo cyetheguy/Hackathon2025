@@ -1,7 +1,10 @@
 import tkinter as tk
 
+import globe
+
 def create_relaxing_frame(root):
     frame = tk.Frame(root, bg="#B2DFDB")
+    frame.grid(row=0, column=0, sticky="nsew")
 
     label = tk.Label(
         frame, 
@@ -22,5 +25,8 @@ def create_relaxing_frame(root):
         justify="center"
     )
     quote.pack(pady=10)
+
+    button = tk.Button(frame, text="Exit Relax", command=lambda: globe.app.show_frame("Main"))
+    button.pack(pady=10)
 
     return frame
