@@ -38,12 +38,14 @@ class App:
             "Refute": refute.create_frame(self.root),
         }
 
+        # Show the main frame by default
+        self.show_frame("Main")
+
         # Create menu
         self.create_menu()
         self.toggle_theme()
 
-        # Show the main frame by default
-        self.show_frame("Main")
+        
 
 
     def create_main(self):
@@ -82,6 +84,18 @@ class App:
             self.username.set(askstring("Enter Username", "Who are you?\nYou will be connect shortly."))
             globe.client.set_name(self.username.get())
 
+    def apply_theme(self, frame, bgColor, fgColor, hgltColor) -> None:
+        frame.config(bg=bgColor)
+        for widget in frame.winfo_children():
+            if isinstance(widget, tk.Frame):
+                widget.config(bg=bgColor)
+                self.apply_theme(widget, bgColor,fgColor,hgltColor)
+            if isinstance(widget, tk.Label):
+                widget.config(bg=bgColor, fg=fgColor)
+            if isinstance(widget, tk.Button):
+                widget.config(background=bgColor, activebackground=hgltColor, foreground=fgColor, borderwidth=3)
+        self.root.after(10, root.update_idletasks())
+
 
     def toggle_theme(self, override:bool = None):
         if (override != None):
@@ -105,24 +119,7 @@ class App:
             highlight_temp = lerp_to_hex(self.hglt_color, hglt_target, i/100)
             self.root.config(bg=bg_temp)
             for frame in self.frames.values():
-                frame.config(bg=bg_temp)
-                for widget in frame.winfo_children():
-                    if isinstance(widget, tk.Frame):
-                        widget.config(bg=bg_temp)
-                        for frame in self.frames.values():
-                            frame.config(bg=bg_temp)
-                            for mini_widget in widget.winfo_children():
-                                if isinstance(mini_widget, tk.Frame):
-                                    mini_widget.config(bg=bg_temp)
-                                if isinstance(mini_widget, tk.Label):
-                                    mini_widget.config(bg=bg_temp, fg=fg_temp)
-                                if isinstance(mini_widget, tk.Button):
-                                    mini_widget.config(background=bg_temp, activebackground=highlight_temp, foreground=fg_temp, borderwidth=3)
-                    if isinstance(widget, tk.Label):
-                        widget.config(bg=bg_temp, fg=fg_temp)
-                    if isinstance(widget, tk.Button):
-                        widget.config(background=bg_temp, activebackground=highlight_temp, foreground=fg_temp, borderwidth=3)
-            self.root.after(10, root.update_idletasks())
+                self.apply_theme(frame, bg_temp, fg_temp, highlight_temp)
         self.bg_color = bg_target
         self.fg_color = fg_target
         self.highlight = highlight_temp
