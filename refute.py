@@ -91,7 +91,7 @@ def create_frame(root):
     frame.grid_columnconfigure(2, weight=1)
     
     # Add a button in the top-left corner
-    top_left_button = tk.Button(frame, text="< Exit ", font=("Arial", 12), command=lambda: globe.app.show_frame("Main"))
+    top_left_button = tk.Button(frame, text="← Exit ", font=("Arial", 12), command=lambda: globe.app.show_frame("Main"))
     top_left_button.grid(row=0, column=0, sticky="nw", padx=10, pady=10)
     
     # Add a title in the top-middle
