@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import Menu
+from audio_file import AudioManager
+
 
 import globe
 import relax_menu
@@ -7,6 +9,7 @@ import relax_menu
 class App:
     def __init__(self, root):
         self.root = root
+        self.audio = AudioManager()
         self.root.title("Relax and Refute")
         self.root.geometry("1280x720")
         self.root.rowconfigure(0, weight=1)
@@ -19,7 +22,6 @@ class App:
             "Relax": relax_menu.create_relaxing_frame(self.root),
             "Refute": self.create_main(),
         }
-
 
         # Create menu
         self.create_menu()
@@ -55,22 +57,24 @@ class App:
 
     def toggle_theme(self):
         if self.isLight:
-            self.isLight = False
-            bg_color = "#ff0000"
-            fg_color = "#000fff"
-        else:
             self.isLight = True
+            bg_color = "#ffffff"
+            fg_color = "#000000"
+            self.audio.play_theme("light")
+        else:
+            self.isLight = False
             bg_color = "#000000"
             fg_color = "#ffffff"
-            
+            self.audio.play_theme("dark")
+
         self.root.config(bg="black")
         for frame in self.frames.values():
-                frame.config(bg=bg_color)
-                for widget in frame.winfo_children():
-                    if isinstance(widget, tk.Frame):
-                        widget.config(bg=bg_color)
-                    if isinstance(widget, tk.Label):
-                        widget.config(bg=bg_color, fg=fg_color)
+            frame.config(bg=bg_color)
+            for widget in frame.winfo_children():
+                if isinstance(widget, tk.Frame):
+                    widget.config(bg=bg_color)
+                if isinstance(widget, tk.Label):
+                    widget.config(bg=bg_color, fg=fg_color)
 
 # Run the application
 if __name__ == "__main__":
