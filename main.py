@@ -134,7 +134,7 @@ class App:
     def toggle_theme(self, override:bool = None):
         if (override != None):
             self.isLight = override
-        elif self.isLight:
+        if self.isLight:
             self.isLight = False
             bg_target = globe.teal
             fg_target = globe.dark_turquoise
